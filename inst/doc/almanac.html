@@ -401,12 +401,12 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb8-5"><a href="#cb8-5"></a><span class="co"># The first time is &quot;slow&quot;</span></span>
 <span id="cb8-6"><a href="#cb8-6"></a><span class="kw">system.time</span>(<span class="kw">alma_search</span>(since, <span class="st">&quot;2000-01-01&quot;</span>, on_weekly))</span>
 <span id="cb8-7"><a href="#cb8-7"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb8-8"><a href="#cb8-8"></a><span class="co">#&gt;   0.075   0.003   0.054</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="co">#&gt;   0.073   0.003   0.056</span></span>
 <span id="cb8-9"><a href="#cb8-9"></a></span>
 <span id="cb8-10"><a href="#cb8-10"></a><span class="co"># Repeated access is fast</span></span>
 <span id="cb8-11"><a href="#cb8-11"></a><span class="kw">system.time</span>(<span class="kw">alma_search</span>(since, <span class="st">&quot;2000-01-01&quot;</span>, on_weekly))</span>
 <span id="cb8-12"><a href="#cb8-12"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb8-13"><a href="#cb8-13"></a><span class="co">#&gt;   0.001   0.000   0.000</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a><span class="co">#&gt;   0.000   0.000   0.001</span></span>
 <span id="cb8-14"><a href="#cb8-14"></a></span>
 <span id="cb8-15"><a href="#cb8-15"></a><span class="co"># The entire event set is cached, so even if you change the arguments,</span></span>
 <span id="cb8-16"><a href="#cb8-16"></a><span class="co"># the operation is still fast.</span></span>

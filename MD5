@@ -1,6 +1,7 @@
-43d499b29adb271d0db920972feaf29e *DESCRIPTION
+b90ce8edbccfe30926a837ff3520d01e *DESCRIPTION
 0578b84ee28af684bb8cefb871d81d75 *LICENSE
-db775e72802c2d766f46e1fb89728599 *NAMESPACE
+0652be3456822c29064607745b176189 *NAMESPACE
+d31cf262921c71472244844731caa77a *NEWS.md
 b7ed7c94d2b12262c3d7c890080b7c77 *R/aaa.R
 056ade1cd225630fbf2f9e5e1c3948a3 *R/adjustments.R
 bd753b61003959cf27a11fae5f5d35d8 *R/alma-events.R
@@ -9,7 +10,7 @@ bd753b61003959cf27a11fae5f5d35d8 *R/alma-events.R
 37a9fa4de791f78b4a54dc5fcf32fc73 *R/alma-search.R
 da8f9588af1e7a9b4a9f2be27986b83f *R/alma-seq.R
 c71ef4f3d023f877e5bc0d5ac0ed9ee7 *R/alma-step.R
-3fd6796773b55134b0b9ce866e348f8b *R/almanac-package.R
+d655c899750e72d1ab8ec4024a7883dd *R/almanac-package.R
 7c686d2a10e611255f40214ccfa8f517 *R/cache-radjusted.R
 0a4f618168c2e976d5f52b58d7e4d422 *R/cache-rintersect.R
 90a3ae7c1a98215e970bb1bdb00891e6 *R/cache-rrule.R
@@ -43,13 +44,13 @@ ab160a9849c22847ef2bb96690a1f7cf *R/rrule.R
 65cef5e0674056f6fc07dd2b3ca85c13 *R/utils-pipe.R
 67c7af4ebf620bfe362ac5f74a2ecb06 *R/utils.R
 15bef400799ada70a55198f1d900083a *README.md
-623e4de72733d1a70db463bd6dc566bd *build/vignette.rds
+29ee7fc0cffceb6e4cf773bd52e75bd8 *build/vignette.rds
 9686c595da5a1491a731d1875dc263ef *inst/doc/adjust-and-shift.R
 3023ece9fdcc2c36eec74d10a06dcda5 *inst/doc/adjust-and-shift.Rmd
 c6ee40db6db6ebbac40ff0570efa7447 *inst/doc/adjust-and-shift.html
 24ca563837d0ec525ffb14dda282a928 *inst/doc/almanac.R
 b553f7336af93f99e7bf507a4b45df66 *inst/doc/almanac.Rmd
-7135aa0892bd968e3d7471992f5898dc *inst/doc/almanac.html
+c9517aae42d9433b71695e01bec1ee57 *inst/doc/almanac.html
 4509e00f9ad2812b4e61d4bd577fbc64 *inst/doc/icalendar.R
 f62894f65d212732c81e9147d07e2678 *inst/doc/icalendar.Rmd
 17f2d92ad1ee3cb551fd2a428440bd40 *inst/doc/icalendar.html
@@ -85,7 +86,7 @@ c800d36c65be109749a282871f52eb10 *man/recur_on_ymonth.Rd
 af2f98d7277c80d14f6923b9530976dc *man/recur_with_week_start.Rd
 b312dd37a61b42e545897e38f624b65e *man/rrule.Rd
 5fd20fd1b79224e05598ef3c092b7840 *man/stepper.Rd
-df7390603ab6a8b71ecad13f714713bc *src/adjustments.cc
+4d75c03a89ce617da4d053e956ca721c *src/adjustments.cc
 7ec237c2e7034388b70f7dd0c4768851 *src/adjustments.h
 5657bce105c0033452cdf0256e52519e *src/alma-next.cc
 f71b196f04c5b0e2b093ab8843fcd093 *src/alma-next.h
