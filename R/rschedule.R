@@ -12,7 +12,7 @@
 #' that rschedule.
 #'
 #' @details
-#' An rschedule is an abstract class that rrule and rbundle both inherit from.
+#' An rschedule is an abstract class that rrule and rset both inherit from.
 #' The sole functionality of rschedule classes is to provide a method for
 #' `rschedule_events()`.
 #'
@@ -55,7 +55,7 @@ new_rschedule <- function(..., class) {
     abort("`...` must have named elements.")
   }
 
-  structure(data, class = c(class, "rschedule"))
+  structure(data, class = c(class, "almanac_rschedule"))
 }
 
 # ------------------------------------------------------------------------------
@@ -69,29 +69,45 @@ rschedule_events <- function(x) {
 #' @export
 rschedule_events.default <- function(x) {
   cls <- glue::glue_collapse(class(x), sep = "/")
-  glubort("Cannot extract events from an object of class <{cls}>.")
+  cli::cli_abort("Can't extract events from a <{cls}>.")
 }
 
 #' @export
-rschedule_events.rschedule <- function(x) {
-  glubort("rschedule subclasses must provide their own `rschedule_events()` method.")
+rschedule_events.almanac_rschedule <- function(x) {
+  cli::cli_abort("<almanac_rschedule> subclasses must provide their own `rschedule_events()` method.")
 }
 
 # ------------------------------------------------------------------------------
 
 is_rschedule <- function(x) {
-  inherits(x, "rschedule")
+  inherits(x, "almanac_rschedule")
 }
 
-validate_rschedule <- function(x, x_arg = "") {
-  if (nzchar(x_arg)) {
-    x_arg <- glue(" `{x_arg}`")
-  }
+check_rschedule <- function(x,
+                            ...,
+                            allow_null = FALSE,
+                            arg = caller_arg(x),
+                            call = caller_env()) {
+  check_inherits(
+    x = x,
+    what = "almanac_rschedule",
+    allow_null = allow_null,
+    arg = arg,
+    call = call
+  )
+}
 
-  if (!is_rschedule(x)) {
-    glubort("Input{x_arg} must be an rschedule, such as an rrule or rbundle.")
+list_check_all_rschedules <- function(x,
+                                      ...,
+                                      arg = caller_arg(x),
+                                      call = caller_env()) {
+  for (i in seq_along(x)) {
+    check_rschedule(
+      x = x[[i]],
+      arg = cli::format_inline("{arg}[[{i}]]"),
+      call = call
+    )
   }
-
-  invisible(x)
+  invisible(NULL)
 }
 

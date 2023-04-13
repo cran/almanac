@@ -13,7 +13,7 @@ Dates defining the range to look for events.}
 
 \item{rschedule}{\verb{[rschedule]}
 
-An rschedule, such as an rrule or rbundle.}
+An rschedule, such as an rrule, runion, rintersect, or rsetdiff.}
 
 \item{inclusive}{\verb{[logical(1)]}
 
@@ -26,13 +26,11 @@ A Date vector of all events between \code{from} and \code{to}.
 \code{alma_search()} retrieves all events between \code{from} and \code{to}.
 }
 \examples{
-on_12th <- monthly() \%>\% recur_on_mday(12)
-on_monday <- weekly() \%>\% recur_on_wday("Monday")
+on_12th <- monthly() \%>\% recur_on_day_of_month(12)
+on_monday <- weekly() \%>\% recur_on_day_of_week("Monday")
 
 # On the 12th of the month, or on Mondays
-rb <- runion() \%>\%
-  add_rschedule(on_12th) \%>\%
-  add_rschedule(on_monday)
+rb <- runion(on_12th, on_monday)
 
 alma_search("2019-01-01", "2019-01-31", rb)
 }

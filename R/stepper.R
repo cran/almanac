@@ -53,12 +53,10 @@
 #'   recur_on_weekends()
 #'
 #' on_christmas <- yearly() %>%
-#'   recur_on_mday(25) %>%
-#'   recur_on_ymonth("Dec")
+#'   recur_on_day_of_month(25) %>%
+#'   recur_on_month_of_year("Dec")
 #'
-#' rb <- runion() %>%
-#'   add_rschedule(on_weekends) %>%
-#'   add_rschedule(on_christmas)
+#' rb <- runion(on_weekends, on_christmas)
 #'
 #' workday <- stepper(rb)
 #'
@@ -85,9 +83,7 @@
 #' # Note that the "observed" date for Christmas is the 26th
 #' alma_search("2005-01-01", "2006-01-01", on_observed_christmas)
 #'
-#' rb2 <- runion() %>%
-#'   add_rschedule(on_weekends) %>%
-#'   add_rschedule(on_observed_christmas)
+#' rb2 <- runion(on_weekends, on_observed_christmas)
 #'
 #' workday2 <- stepper(rb2)
 #'
@@ -121,7 +117,7 @@ stepper <- function(rschedule) {
 
 #' @rdname stepper
 #' @export
-workdays <- function(n, since = "1900-01-01", until = "2100-01-01") {
+workdays <- function(n, since = NULL, until = NULL) {
   rschedule <- weekly(since = since, until = until)
   rschedule <- recur_on_weekends(rschedule)
   workdays_stepper <- stepper(rschedule)
@@ -135,7 +131,7 @@ new_stepper <- function(n = integer(), rschedule = daily()) {
     abort("`n` must be an integer.")
   }
 
-  validate_rschedule(rschedule, x_arg = "rschedule")
+  check_rschedule(rschedule)
 
   new_vctr(
     .data = n,
@@ -284,6 +280,19 @@ vec_cast.almanac_stepper.almanac_stepper <- function(x, to, ..., x_arg = "", to_
     stop_incompatible_cast(x, to, x_arg = x_arg, to_arg = to_arg, details = details)
   }
   x
+}
+
+# ------------------------------------------------------------------------------
+# slider_plus() / slider_minus()
+
+# @export - .onLoad()
+slider_plus.Date.almanac_stepper <- function(x, y) {
+  vec_arith("+", x, y)
+}
+
+# @export - .onLoad()
+slider_minus.Date.almanac_stepper <- function(x, y) {
+  vec_arith("-", x, y)
 }
 
 # ------------------------------------------------------------------------------

@@ -41,8 +41,8 @@
 #' until <- "2010-01-01"
 #'
 #' on_christmas <- yearly(since = since, until = until) %>%
-#'   recur_on_ymonth("Dec") %>%
-#'   recur_on_mday(25)
+#'   recur_on_month_of_year("Dec") %>%
+#'   recur_on_day_of_month(25)
 #'
 #' # All Christmas dates, with no adjustments
 #' alma_events(on_christmas)
@@ -63,35 +63,35 @@ radjusted <- function(rschedule, adjust_on, adjustment) {
 # ------------------------------------------------------------------------------
 
 #' @export
-print.radjusted <- function(x, ...) {
-  print(format(x))
+print.almanac_radjusted <- function(x, ...) {
+  cli::cli_text("<radjusted>")
+
+  cli_indented()
+  cli::cli_text(cli::style_underline("adjust:"))
+  print(x$rschedule)
+  cli::cli_end()
+
+  cli_indented()
+  cli::cli_text(cli::style_underline("adjust on:"))
+  print(x$adjust_on)
+  cli::cli_end()
+
   invisible(x)
-}
-
-#' @export
-format.radjusted <- function(x, ...) {
-  rschedule <- format(x$rschedule)
-  adjust_on <- format(x$adjust_on)
-
-  out <- c("<radjusted>\n", "Adjust:", rschedule, "\nAdjust on:", adjust_on)
-  out <- glue::glue_collapse(out, sep = "\n")
-
-  out
 }
 
 # ------------------------------------------------------------------------------
 
 #' @export
-rschedule_events.radjusted <- function(x) {
+rschedule_events.almanac_radjusted <- function(x) {
   x$cache$get_events()
 }
 
 # ------------------------------------------------------------------------------
 
 new_radjusted <- function(rschedule, adjust_on, adjustment) {
-  validate_rschedule(rschedule, "rschedule")
-  validate_rschedule(adjust_on, "adjust_on")
-  validate_adjustment(adjustment, "adjustment")
+  check_rschedule(rschedule)
+  check_rschedule(adjust_on)
+  check_adjustment(adjustment)
 
   cache <- cache_radjusted$new(
     rschedule = rschedule,
@@ -104,26 +104,26 @@ new_radjusted <- function(rschedule, adjust_on, adjustment) {
     adjust_on = adjust_on,
     adjustment = adjustment,
     cache = cache,
-    class = "radjusted"
+    class = "almanac_radjusted"
   )
 }
 
 # ------------------------------------------------------------------------------
 
-validate_adjustment <- function(x, x_arg = "") {
-  if (nzchar(x_arg)) {
-    x_arg <- glue(" `{x_arg}`")
-  }
-
-  if (!is_function(x)) {
-    glubort("Input{x_arg} must be a function.")
-  }
+check_adjustment <- function(x,
+                             ...,
+                             arg = caller_arg(x),
+                             call = caller_env()) {
+  check_function(x, arg = arg, call = call)
 
   fmls <- fn_fmls(x)
 
   if (length(fmls) != 2L) {
-    glubort("Input{x_arg} must have two arguments, `x` and `rschedule`.")
+    cli::cli_abort(
+      "{.arg {arg}} must have two arguments, {.arg x} and {.arg rschedule}.",
+      call = call
+    )
   }
 
-  invisible(x)
+  invisible(NULL)
 }

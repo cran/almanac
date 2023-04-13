@@ -8,13 +8,13 @@
 \alias{yearly}
 \title{Create a recurrence rule}
 \usage{
-daily(since = "1900-01-01", until = "2100-01-01")
+daily(since = NULL, until = NULL)
 
-weekly(since = "1900-01-01", until = "2100-01-01")
+weekly(since = NULL, until = NULL)
 
-monthly(since = "1900-01-01", until = "2100-01-01")
+monthly(since = NULL, until = NULL)
 
-yearly(since = "1900-01-01", until = "2100-01-01")
+yearly(since = NULL, until = NULL)
 }
 \arguments{
 \item{since}{\verb{[Date(1)]}
@@ -44,7 +44,8 @@ to them, use one of the \verb{recur_*()} functions.
 \details{
 By default, \code{since == "1900-01-01"} and \code{until == "2100-01-01"}, which should
 capture most use cases well while still being performant. You may need to
-adjust these dates if you want events outside this range.
+adjust these dates if you want events outside this range. See
+\code{\link[=almanac_since]{almanac_since()}} and \code{\link[=almanac_until]{almanac_until()}} for more information.
 
 In terms of speed, it is generally more efficient if you adjust the \code{since}
 and \code{until} date to be closer to the first date in the sequence of dates
@@ -63,7 +64,7 @@ default will use a quarterly rule starting in January since the default
 \code{since} date is \code{1900-01-01}. See the examples.
 }
 \examples{
-rrule <- monthly() \%>\% recur_on_mday(25)
+rrule <- monthly() \%>\% recur_on_day_of_month(25)
 
 alma_search("1970-01-01", "1971-01-01", rrule)
 
@@ -71,21 +72,21 @@ alma_search("1970-01-01", "1971-01-01", rrule)
 alma_search("1899-01-01", "1901-01-01", rrule)
 
 # Adjust the `since` date to get access to these dates
-rrule_pre_1900 <- monthly(since = "1850-01-01") \%>\% recur_on_mday(25)
+rrule_pre_1900 <- monthly(since = "1850-01-01") \%>\% recur_on_day_of_month(25)
 alma_search("1899-01-01", "1901-01-01", rrule_pre_1900)
 
 # A quarterly recurrence rule can be built from
 # `monthly()` and `recur_on_interval()`
 on_first_of_the_quarter <- monthly() \%>\%
   recur_on_interval(3) \%>\%
-  recur_on_mday(1)
+  recur_on_day_of_month(1)
 
 alma_search("1999-01-01", "2000-04-01", on_first_of_the_quarter)
 
 # Alter the starting quarter by altering the `since` date
 on_first_of_the_quarter_starting_in_feb <- monthly(since = "1998-02-01") \%>\%
   recur_on_interval(3) \%>\%
-  recur_on_mday(1)
+  recur_on_day_of_month(1)
 
 alma_search(
   "1999-01-01",

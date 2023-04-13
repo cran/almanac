@@ -35,7 +35,26 @@ test_that("can locate easter", {
   expect_equal(x, easters)
 })
 
+test_that("cannot be set twice", {
+  x <- yearly() %>% recur_on_easter()
+
+  expect_snapshot(error = TRUE, {
+    recur_on_easter(x)
+  })
+})
+
+# ------------------------------------------------------------------------------
+# Deprecated
+
+test_that("`offset` is deprecated", {
+  expect_snapshot({
+    recur_on_easter(yearly(), offset = 2)
+  })
+})
+
 test_that("can recur on easter monday", {
+  options(lifecycle_verbosity = "quiet")
+
   rr <- yearly(since = "1900-01-01")
   rr <- recur_on_easter(rr, offset = 1L)
 
@@ -45,6 +64,8 @@ test_that("can recur on easter monday", {
 })
 
 test_that("can recur on good friday", {
+  options(lifecycle_verbosity = "quiet")
+
   rr <- yearly(since = "1900-01-01")
   rr <- recur_on_easter(rr, offset = -2L)
 
@@ -53,20 +74,29 @@ test_that("can recur on good friday", {
   expect_equal(x, easters - 2)
 })
 
-test_that("cannot be set twice", {
-  x <- yearly() %>% recur_on_easter()
-  expect_error(recur_on_easter(x), "has already been set")
-})
-
 test_that("offset must be integerish", {
-  expect_error(recur_on_easter(yearly(), offset = 1.5), class = "vctrs_error_cast_lossy")
+  options(lifecycle_verbosity = "quiet")
+
+  expect_snapshot(error = TRUE, {
+    recur_on_easter(yearly(), offset = 1.5)
+  })
 })
 
 test_that("offset cannot be NA", {
-  expect_error(recur_on_easter(yearly(), offset = NA), "cannot be `NA`")
+  options(lifecycle_verbosity = "quiet")
+
+  expect_snapshot(error = TRUE, {
+    recur_on_easter(yearly(), offset = NA)
+  })
 })
 
 test_that("offset is bounded", {
-  expect_error(recur_on_easter(yearly(), offset = 367), "can only take values")
-  expect_error(recur_on_easter(yearly(), offset = -367), "can only take values")
+  options(lifecycle_verbosity = "quiet")
+
+  expect_snapshot(error = TRUE, {
+    recur_on_easter(yearly(), offset = 367)
+  })
+  expect_snapshot(error = TRUE, {
+    recur_on_easter(yearly(), offset = -367)
+  })
 })

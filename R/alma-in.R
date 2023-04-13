@@ -11,7 +11,7 @@
 #' @export
 #' @examples
 #' rrule <- weekly() %>%
-#'   recur_on_wday("Thursday")
+#'   recur_on_day_of_week("Thursday")
 #'
 #' # A Thursday and Friday
 #' x <- as.Date("1970-01-01") + 0:1
@@ -20,17 +20,15 @@
 #'
 #' # Every month, on the 2nd day of the month
 #' rrule2 <- monthly() %>%
-#'   recur_on_mday(2)
+#'   recur_on_day_of_month(2)
 #'
-#' # Make a larger rbundle made of multiple rules
-#' rb <- runion() %>%
-#'  add_rschedule(rrule) %>%
-#'  add_rschedule(rrule2)
+#' # Make a larger set of multiple rules
+#' rb <- runion(rrule, rrule2)
 #'
 #' alma_in(x, rb)
 alma_in <- function(x, rschedule) {
   x <- vec_cast_date(x)
-  validate_rschedule(rschedule, "rschedule")
+  check_rschedule(rschedule)
   events <- rschedule_events(rschedule)
   vec_in(x, events)
 }

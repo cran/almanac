@@ -6,13 +6,7 @@
 \alias{almanac-package}
 \title{almanac: Tools for Working with Recurrence Rules}
 \description{
-Provides tools for defining recurrence rules and
-    recurrence bundles. Recurrence rules are a programmatic way to define
-    a recurring event, like the first Monday of December. Multiple
-    recurrence rules can be combined into larger recurrence bundles.
-    Together, these provide a system for adjusting and generating
-    sequences of dates while simultaneously skipping over dates in a
-    recurrence bundle's event set.
+Provides tools for defining recurrence rules and recurrence sets. Recurrence rules are a programmatic way to define a recurring event, like the first Monday of December. Multiple recurrence rules can be combined into larger recurrence sets. A full holiday and calendar interface is also provided that can generate holidays within a particular year, can detect if a date is a holiday, can respect holiday observance rules, and allows for custom holidays.
 }
 \seealso{
 Useful links:
@@ -23,11 +17,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Davis Vaughan \email{davis@rstudio.com}
+\strong{Maintainer}: Davis Vaughan \email{davis@posit.co}
 
 Other contributors:
 \itemize{
-  \item RStudio [copyright holder]
+  \item Posit Software, PBC [copyright holder, funder]
 }
 
 }

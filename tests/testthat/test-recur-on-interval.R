@@ -62,7 +62,7 @@ test_that("yearly - on a interval", {
 test_that("interval is for the frequency, not the number of events", {
   rrule <- monthly(since = "2000-01-01") %>%
     recur_on_interval(2) %>%
-    recur_on_mday(1:2)
+    recur_on_day_of_month(1:2)
 
   expect <- as.Date(c("2000-01-01", "2000-01-02", "2000-03-01", "2000-03-02"))
 
@@ -89,10 +89,14 @@ test_that("non-existant dates aren't included", {
 # Error checking
 
 test_that("cannot use `interval < 1`", {
-  expect_error(yearly() %>% recur_on_interval(0), "must be greater than 0")
-  expect_error(yearly() %>% recur_on_interval(-1), "must be greater than 0")
+  expect_snapshot({
+    (expect_error(yearly() %>% recur_on_interval(0)))
+    (expect_error(yearly() %>% recur_on_interval(-1)))
+  })
 })
 
 test_that("interval must be an integer", {
-  expect_error(yearly() %>% recur_on_interval(30.5), class = "vctrs_error_cast_lossy")
+  expect_snapshot(error = TRUE, {
+    yearly() %>% recur_on_interval(30.5)
+  })
 })

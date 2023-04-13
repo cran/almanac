@@ -20,11 +20,12 @@ An updated rrule.
 }
 \description{
 \code{recur_for_count()} controls the total number of events in the recurrence
-set. Using \code{recur_for_count()} will override the \code{until} date of the rule.
+set.
 }
 \details{
 Remember that the number of times the occurrence has occurred is counted
-from the \code{since} date! Adjust it as necessary to get your desired results.
+from the \code{since} date and is limited by the \code{until} date! Adjust them as
+necessary to get your desired results.
 }
 \examples{
 # Using the default `since` date
@@ -41,7 +42,7 @@ alma_search("2018-12-31", "2019-01-25", daily_since_2019_for_5)
 # example below, they are not added to the total count. Only true event
 # dates are counted.
 on_31_for_5 <- monthly(since = "2019-01-01") \%>\%
-  recur_on_mday(31) \%>\%
+  recur_on_day_of_month(31) \%>\%
   recur_for_count(5)
 
 alma_search("2019-01-01", "2020-01-01", on_31_for_5)

@@ -3,7 +3,7 @@
 #' @description
 #'
 #' `recur_with_week_start()` controls the week day that represents the start of
-#' the week. This is important for rules that use [recur_on_yweek()].
+#' the week. This is important for rules that use [recur_on_week_of_year()].
 #'
 #' _The default day of the week to start on is Monday._
 #'
@@ -11,7 +11,7 @@
 #'
 #'    A recurrence rule.
 #'
-#' @param wday `[integer(1) / character(1)]`
+#' @param day `[integer(1) / character(1)]`
 #'
 #'    Day of the week to start the week on. Must be an integer value in
 #'    `[1, 7]`, with `1 = Monday` and `7 = Sunday`. This is also allowed to be
@@ -26,7 +26,7 @@
 #' # with ISO-8601 standards, which require that the first week of the year
 #' # is when there are at least 4 days in that year, and the week starts on
 #' # the week day specified by `recur_with_week_start()` (Monday by default).
-#' on_first_week <- yearly() %>% recur_on_yweek(1)
+#' on_first_week <- yearly() %>% recur_on_week_of_year(1)
 #'
 #' # In 2017:
 #' # - Look at dates 1-4
@@ -47,21 +47,16 @@
 #' # - Look at dates 1-4
 #' # - 2015-01-04 is a Sunday, so start the first week here
 #' on_first_week_sun <- yearly() %>%
-#'   recur_on_yweek(1) %>%
+#'   recur_on_week_of_year(1) %>%
 #'   recur_with_week_start("Sunday")
 #'
 #' alma_search("2014-12-25", "2015-01-25", on_first_week_sun)
-recur_with_week_start <- function(x, wday) {
-  validate_rrule(x, "x")
+recur_with_week_start <- function(x, day) {
+  check_rrule(x)
 
-  wday <- wday_normalize(wday)
+  day <- day_of_week_normalize(day)
+  check_number_whole(day, min = 1, max = 7)
+  day <- vec_cast(day, to = integer())
 
-  wday <- vec_cast(wday, integer(), x_arg = "wday")
-  vec_assert(wday, size = 1L)
-
-  if (wday < 1L || wday > 7L) {
-    abort("`wday` must be an integer between 1 and 7.")
-  }
-
-  tweak_rrule(x, week_start = wday)
+  tweak_rrule(x, week_start = day)
 }

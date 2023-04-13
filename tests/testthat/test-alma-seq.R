@@ -1,8 +1,12 @@
 test_that("can handle NA `from` and `to` values", {
   na <- new_date(NA_real_)
 
-  expect_error(alma_seq(na, Sys.Date(), daily()), "cannot be `NA`")
-  expect_error(alma_seq(Sys.Date(), na, daily()), "cannot be `NA`")
+  expect_snapshot(error = TRUE, {
+    alma_seq(na, Sys.Date(), daily())
+  })
+  expect_snapshot(error = TRUE, {
+    alma_seq(Sys.Date(), na, daily())
+  })
 })
 
 test_that("behavior is like rlang::seq2() when `from` is after `to`", {
@@ -17,7 +21,7 @@ test_that("empty runion means no dates are removed", {
 })
 
 test_that("events are removed", {
-  rule <- monthly() %>% recur_on_mday(2)
+  rule <- monthly() %>% recur_on_day_of_month(2)
 
   expect_identical(
     alma_seq("2000-01-01", "2000-01-03", rule),
@@ -27,7 +31,7 @@ test_that("events are removed", {
 
 test_that("inclusiveness of from/to is respected", {
   rrule <- daily(since = "1970-01-01", until = "1970-01-03") %>%
-    recur_on_mday(c(1, 3))
+    recur_on_day_of_month(c(1, 3))
 
   from <- "1970-01-01"
   to <- "1970-01-03"

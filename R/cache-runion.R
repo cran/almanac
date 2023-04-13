@@ -50,13 +50,13 @@ cache_runion__cache_build_impl <- function(self, private) {
   }
 
   # Combine, sort, and uniquify
-  events <- vec_unchop(rschedules_events, ptype = new_date())
+  events <- list_unchop(rschedules_events, ptype = new_date())
   events <- vec_unique(events)
   events <- vec_sort(events)
 
   # Forcibly remove `exdates`
   if (!vec_is_empty(exdates)) {
-    events <- vec_set_diff(events, exdates)
+    events <- vec_set_difference(events, exdates)
   }
 
   private$events <- events

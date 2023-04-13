@@ -55,37 +55,40 @@ system.time(alma_search(since, "1990-05-01", on_weekly))
 
 ## -----------------------------------------------------------------------------
 on_4th_and_16th <- monthly(since = "2000-01-01") %>%
-  recur_on_mday(c(4, 16))
+  recur_on_day_of_month(c(4, 16))
 
 alma_search("2000-01-01", "2000-06-01", on_4th_and_16th)
 
 ## -----------------------------------------------------------------------------
 on_labor_day <- yearly() %>%
-  recur_on_ymonth("Sep") %>%
-  recur_on_wday("Monday", nth = 1)
+  recur_on_month_of_year("Sep") %>%
+  recur_on_day_of_week("Monday", nth = 1)
 
 alma_search("2000-01-01", "2005-01-01", on_labor_day)
 
 ## -----------------------------------------------------------------------------
 on_last_monday_in_sept <- yearly(since = "2000-01-01") %>%
-  recur_on_ymonth("Sep") %>%
-  recur_on_wday("Monday", nth = -1)
+  recur_on_month_of_year("Sep") %>%
+  recur_on_day_of_week("Monday", nth = -1)
 
 alma_search("2000-01-01", "2005-01-01", on_last_monday_in_sept)
 
 ## -----------------------------------------------------------------------------
 on_christmas <- yearly() %>%
-  recur_on_ymonth("Dec") %>%
-  recur_on_mday(25)
+  recur_on_month_of_year("Dec") %>%
+  recur_on_day_of_month(25)
 
-christmas_or_labor_day <- runion() %>%
-  add_rschedule(on_christmas) %>%
-  add_rschedule(on_labor_day)
+christmas_or_labor_day <- runion(
+  on_christmas,
+  on_labor_day
+)
 
 alma_search("2000-01-01", "2002-01-01", christmas_or_labor_day)
 
-christmas_or_labor_day_except_2000_labor_day <- christmas_or_labor_day %>%
-  add_exdates("2000-09-04")
+christmas_or_labor_day_except_2000_labor_day <- rsetdiff(
+  christmas_or_labor_day, 
+  rcustom("2000-09-04")
+)
 
 alma_search("2000-01-01", "2002-01-01", christmas_or_labor_day_except_2000_labor_day)
 

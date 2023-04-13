@@ -2,7 +2,7 @@
 title: "Introduction to almanac"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{almanac}
+  %\VignetteIndexEntry{Introduction to almanac}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -51,7 +51,7 @@ alma_search(from = "1990-01-01", to = "1995-12-31", on_yearly)
 
 What if we want a yearly value, but we want it on January 5th every year, rather than on the 1st? `yearly()` has an important argument called `since` that controls two things: the start date of the recurrence rule, and information such as the month, or the day of the month to use if no other conditions have been specified to override those.
 
-The default of `since` is set to `1900-01-01`, but this is arbitrary. It is because of this default that in the above example with `alma_search()` we get values on January 1st. Let's change that.
+The default of `since` is set to `1900-01-01`, but this is arbitrary (see `almanac_since()`). It is because of this default that in the above example with `alma_search()` we get values on January 1st. Let's change that.
 
 ```{r}
 on_yearly_jan_5 <- yearly(since = "1990-01-05")
@@ -66,7 +66,7 @@ Now that the `since` date has been set to 1990, if we try and find yearly dates 
 alma_search("1988-01-01", "1995-12-31", on_yearly_jan_5)
 ```
 
-There is also an `until` argument to `yearly()` that controls the upper bound of the range to look in. This is arbitrarily set to `2100-01-01`, but can be expanded or contracted as required.
+There is also an `until` argument to `yearly()` that controls the upper bound of the range to look in. This is arbitrarily set to `2100-01-01`, but can be expanded or contracted as required (see `almanac_until()`).
 
 ## Event Set
 
@@ -119,7 +119,7 @@ So far we have worked with the base recurrence rules. Things get _much_ more int
 
 ```{r}
 on_4th_and_16th <- monthly(since = "2000-01-01") %>%
-  recur_on_mday(c(4, 16))
+  recur_on_day_of_month(c(4, 16))
 
 alma_search("2000-01-01", "2000-06-01", on_4th_and_16th)
 ```
@@ -130,33 +130,33 @@ Recurrence rules can continually be added to further refine your rule. When you 
 
 - Use a `yearly()` base since this happens 1 time per year.
 
-- Use `recur_on_ymonth()` to hone in on September.
+- Use `recur_on_month_of_year()` to hone in on September.
 
-- Use `recur_on_wday()` to hone in on the first Monday of the month.
+- Use `recur_on_day_of_week()` to hone in on the first Monday of the month.
 
 ```{r}
 on_labor_day <- yearly() %>%
-  recur_on_ymonth("Sep") %>%
-  recur_on_wday("Monday", nth = 1)
+  recur_on_month_of_year("Sep") %>%
+  recur_on_day_of_week("Monday", nth = 1)
 
 alma_search("2000-01-01", "2005-01-01", on_labor_day)
 ```
 
-The `nth` argument of `recur_on_wday()` is especially useful for selecting from the end of the month. If we wanted the _last_ Monday in September instead, we could do:
+The `nth` argument of `recur_on_day_of_week()` is especially useful for selecting from the end of the month. If we wanted the _last_ Monday in September instead, we could do:
 
 ```{r}
 on_last_monday_in_sept <- yearly(since = "2000-01-01") %>%
-  recur_on_ymonth("Sep") %>%
-  recur_on_wday("Monday", nth = -1)
+  recur_on_month_of_year("Sep") %>%
+  recur_on_day_of_week("Monday", nth = -1)
 
 alma_search("2000-01-01", "2005-01-01", on_last_monday_in_sept)
 ```
 
-## Recurrence Bundles
+## Recurrence Sets
 
 Recurrence rules are powerful tools on their own, but they aren't enough to solve every task. Say you want to construct a rule that includes both Christmas and Labor Day as events. It would be impossible to construct this kind of event set using a single rule, but if you could _bundle_ multiple rules together, one for Christmas and one for Labor Day, then it would be possible.
 
-An _rbundle_ is a bundle of recurrence schedules. A recurrence schedule, or rschedule, is an overarching term for both rrules and rbundles. There are three types of rbundles in almanac. Each create their event set by performing some kind of set operation on the event sets of the underlying rschedules that you added to the bundle.
+An _rset_ is a bundle of recurrence schedules. A recurrence schedule, or rschedule, is an overarching term for both rrules and rsets. There are three types of rsets in almanac. Each create their event set by performing some kind of set operation on the event sets of the underlying rschedules that you added to the set.
 
 - `runion()` takes the union.
 
@@ -164,25 +164,26 @@ An _rbundle_ is a bundle of recurrence schedules. A recurrence schedule, or rsch
 
 - `rsetdiff()` takes the set difference.
 
-rbundles can also contain specialized dates that you want to forcibly include in the event set, called rdates, and ones that you want to forcibly exclude, called exdates.
-
-The most useful rbundle is runion, as this allows you construct an event set that, for example, falls on multiple holidays and all weekends. The following creates an runion from rrules based on Christmas and Labor Day.
+The most useful rset is runion, as this allows you construct an event set that, for example, falls on multiple holidays and all weekends. The following creates an runion from rrules based on Christmas and Labor Day.
 
 ```{r}
 on_christmas <- yearly() %>%
-  recur_on_ymonth("Dec") %>%
-  recur_on_mday(25)
+  recur_on_month_of_year("Dec") %>%
+  recur_on_day_of_month(25)
 
-christmas_or_labor_day <- runion() %>%
-  add_rschedule(on_christmas) %>%
-  add_rschedule(on_labor_day)
+christmas_or_labor_day <- runion(
+  on_christmas,
+  on_labor_day
+)
 
 alma_search("2000-01-01", "2002-01-01", christmas_or_labor_day)
 
-christmas_or_labor_day_except_2000_labor_day <- christmas_or_labor_day %>%
-  add_exdates("2000-09-04")
+christmas_or_labor_day_except_2000_labor_day <- rsetdiff(
+  christmas_or_labor_day, 
+  rcustom("2000-09-04")
+)
 
 alma_search("2000-01-01", "2002-01-01", christmas_or_labor_day_except_2000_labor_day)
 ```
 
-A recurrence bundle is a critical data structure in almanac. It serves as a general container to dump all of your company's holiday and weekend recurrence rules.
+A recurrence set is a critical data structure in almanac. It serves as a general container to dump all of your company's holiday and weekend recurrence rules.

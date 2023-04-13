@@ -1,13 +1,13 @@
 
 test_that("can create an radjusted rschedule", {
   x <- radjusted(daily(), daily(), adj_none)
-  expect_s3_class(x, c("radjusted", "rschedule"))
+  expect_s3_class(x, c("almanac_radjusted", "almanac_rschedule"))
 })
 
 test_that("radjusted adjusts dates", {
   on_christmas <- yearly(since = "2004-01-01", until = "2006-12-31") %>%
-    recur_on_mday(25) %>%
-    recur_on_ymonth("Dec")
+    recur_on_day_of_month(25) %>%
+    recur_on_month_of_year("Dec")
 
   on_weekends <- weekly(since = "2004-01-01", until = "2006-12-31") %>%
     recur_on_weekends()
@@ -21,28 +21,36 @@ test_that("radjusted adjusts dates", {
 })
 
 test_that("rschedule is checked", {
-  expect_error(radjusted(1, daily(), adj_none), "`rschedule` must be an rschedule")
+  expect_snapshot(error = TRUE, {
+    radjusted(1, daily(), adj_none)
+  })
 })
 
 test_that("adjust_on is checked", {
-  expect_error(radjusted(daily(), 1, adj_none), "`adjust_on` must be an rschedule")
+  expect_snapshot(error = TRUE, {
+    radjusted(daily(), 1, adj_none)
+  })
 })
 
 test_that("adjustment is checked", {
-  expect_error(radjusted(daily(), daily(), 1), "must be a function")
-  expect_error(radjusted(daily(), daily(), function(x) x), "must have two arguments")
+  expect_snapshot(error = TRUE, {
+    radjusted(daily(), daily(), 1)
+  })
+  expect_snapshot(error = TRUE, {
+    radjusted(daily(), daily(), function(x) x)
+  })
 })
 
 # ------------------------------------------------------------------------------
 
 test_that("radjusted has informative print method", {
-  verify_output(test_path("output", "test-radjusted.txt"), {
+  expect_snapshot({
     "# basic method"
     radjusted(daily(), daily(), adj_none)
 
     "# with runions"
-    rrule <- recur_on_wday(weekly(), "Wed")
-    runion <- add_rschedule(runion(), weekly())
+    rrule <- recur_on_day_of_week(weekly(), "Wed")
+    runion <- runion(weekly())
     radjusted(rrule, runion, adj_none)
   })
 })

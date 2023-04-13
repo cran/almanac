@@ -13,12 +13,12 @@ x \%s+\% y
 
 x \%s-\% y
 
-workdays(n, since = "1900-01-01", until = "2100-01-01")
+workdays(n, since = NULL, until = NULL)
 }
 \arguments{
 \item{rschedule}{\verb{[rschedule]}
 
-An rschedule, such as an rrule or rbundle.}
+An rschedule, such as an rrule, runion, rintersect, or rsetdiff.}
 
 \item{x, y}{\verb{[objects]}
 
@@ -82,12 +82,10 @@ on_weekends <- weekly() \%>\%
   recur_on_weekends()
 
 on_christmas <- yearly() \%>\%
-  recur_on_mday(25) \%>\%
-  recur_on_ymonth("Dec")
+  recur_on_day_of_month(25) \%>\%
+  recur_on_month_of_year("Dec")
 
-rb <- runion() \%>\%
-  add_rschedule(on_weekends) \%>\%
-  add_rschedule(on_christmas)
+rb <- runion(on_weekends, on_christmas)
 
 workday <- stepper(rb)
 
@@ -114,9 +112,7 @@ on_observed_christmas <- radjusted(
 # Note that the "observed" date for Christmas is the 26th
 alma_search("2005-01-01", "2006-01-01", on_observed_christmas)
 
-rb2 <- runion() \%>\%
-  add_rschedule(on_weekends) \%>\%
-  add_rschedule(on_observed_christmas)
+rb2 <- runion(on_weekends, on_observed_christmas)
 
 workday2 <- stepper(rb2)
 

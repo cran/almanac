@@ -10,8 +10,8 @@ library(lubridate, warn.conflicts = FALSE)
 
 ## -----------------------------------------------------------------------------
 on_christmas <- yearly() %>%
-  recur_on_mday(25) %>%
-  recur_on_ymonth("Dec")
+  recur_on_day_of_month(25) %>%
+  recur_on_month_of_year("Dec")
 
 x <- as.Date(c("2019-12-24", "2019-12-25"))
 

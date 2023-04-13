@@ -16,7 +16,8 @@
 #' @details
 #' By default, `since == "1900-01-01"` and `until == "2100-01-01"`, which should
 #' capture most use cases well while still being performant. You may need to
-#' adjust these dates if you want events outside this range.
+#' adjust these dates if you want events outside this range. See
+#' [almanac_since()] and [almanac_until()] for more information.
 #'
 #' In terms of speed, it is generally more efficient if you adjust the `since`
 #' and `until` date to be closer to the first date in the sequence of dates
@@ -48,7 +49,7 @@
 #' A new empty rrule.
 #'
 #' @examples
-#' rrule <- monthly() %>% recur_on_mday(25)
+#' rrule <- monthly() %>% recur_on_day_of_month(25)
 #'
 #' alma_search("1970-01-01", "1971-01-01", rrule)
 #'
@@ -56,21 +57,21 @@
 #' alma_search("1899-01-01", "1901-01-01", rrule)
 #'
 #' # Adjust the `since` date to get access to these dates
-#' rrule_pre_1900 <- monthly(since = "1850-01-01") %>% recur_on_mday(25)
+#' rrule_pre_1900 <- monthly(since = "1850-01-01") %>% recur_on_day_of_month(25)
 #' alma_search("1899-01-01", "1901-01-01", rrule_pre_1900)
 #'
 #' # A quarterly recurrence rule can be built from
 #' # `monthly()` and `recur_on_interval()`
 #' on_first_of_the_quarter <- monthly() %>%
 #'   recur_on_interval(3) %>%
-#'   recur_on_mday(1)
+#'   recur_on_day_of_month(1)
 #'
 #' alma_search("1999-01-01", "2000-04-01", on_first_of_the_quarter)
 #'
 #' # Alter the starting quarter by altering the `since` date
 #' on_first_of_the_quarter_starting_in_feb <- monthly(since = "1998-02-01") %>%
 #'   recur_on_interval(3) %>%
-#'   recur_on_mday(1)
+#'   recur_on_day_of_month(1)
 #'
 #' alma_search(
 #'   "1999-01-01",
@@ -83,43 +84,59 @@ NULL
 
 #' @rdname rrule
 #' @export
-daily <- function(since = "1900-01-01", until = "2100-01-01") {
+daily <- function(since = NULL, until = NULL) {
   rrule(since, until, frequency = "daily")
 }
 
 #' @rdname rrule
 #' @export
-weekly <- function(since = "1900-01-01", until = "2100-01-01") {
+weekly <- function(since = NULL, until = NULL) {
   rrule(since, until, frequency = "weekly")
 }
 
 #' @rdname rrule
 #' @export
-monthly <- function(since = "1900-01-01", until = "2100-01-01") {
+monthly <- function(since = NULL, until = NULL) {
   rrule(since, until, frequency = "monthly")
 }
 
 #' @rdname rrule
 #' @export
-yearly <- function(since = "1900-01-01", until = "2100-01-01") {
+yearly <- function(since = NULL, until = NULL) {
   rrule(since, until, frequency = "yearly")
 }
 
 # ------------------------------------------------------------------------------
 
 #' @export
-rschedule_events.rrule <- function(x) {
+rschedule_events.almanac_rrule <- function(x) {
   x$cache$get_events()
 }
 
 # ------------------------------------------------------------------------------
 
-rrule <- function(since, until, frequency) {
-  since <- check_since(since)
-  until <- check_until(until)
+rrule <- function(since, until, frequency, ..., call = caller_env()) {
+  if (is_null(since)) {
+    since <- almanac_since()
+  }
+  if (is_null(until)) {
+    until <- almanac_until()
+  }
+
+  since <- vec_cast_date(since, call = call)
+  vec_check_size(since, size = 1L, call = call)
+  check_no_missing(since, call = call)
+  check_finite(since, call = call)
+  check_date_within_bounds(since, call = call)
+
+  until <- vec_cast_date(until, call = call)
+  vec_check_size(until, size = 1L, call = call)
+  check_no_missing(until, call = call)
+  check_finite(until, call = call)
+  check_date_within_bounds(until, call = call)
 
   if (since > until) {
-    abort("`since` must be before `until`.")
+    abort("`since` must be before `until`.", call = call)
   }
 
   new_rrule(
@@ -129,17 +146,17 @@ rrule <- function(since, until, frequency) {
   )
 }
 
-new_rrule <- function(since = as.Date("1900-01-01"),
-                      until = as.Date("2100-01-01"),
+new_rrule <- function(since = almanac_since(),
+                      until = almanac_until(),
                       frequency = "yearly",
                       count = NULL,
                       interval = NULL,
                       week_start = NULL,
-                      ymonth = NULL,
-                      yweek = NULL,
-                      yday = NULL,
-                      mday = NULL,
-                      wday = NULL,
+                      month_of_year = NULL,
+                      week_of_year = NULL,
+                      day_of_year = NULL,
+                      day_of_month = NULL,
+                      day_of_week = NULL,
                       position = NULL,
                       easter = NULL) {
   rules <- list(
@@ -149,11 +166,11 @@ new_rrule <- function(since = as.Date("1900-01-01"),
     count = count,
     interval = interval,
     week_start = week_start,
-    ymonth = ymonth,
-    yweek = yweek,
-    yday = yday,
-    mday = mday,
-    wday = wday,
+    month_of_year = month_of_year,
+    week_of_year = week_of_year,
+    day_of_year = day_of_year,
+    day_of_month = day_of_month,
+    day_of_week = day_of_week,
     position = position,
     easter = easter
   )
@@ -163,58 +180,32 @@ new_rrule <- function(since = as.Date("1900-01-01"),
   new_rschedule(
     rules = rules,
     cache = cache,
-    class = "rrule"
+    class = "almanac_rrule"
   )
 }
 
 # ------------------------------------------------------------------------------
 
 is_rrule <- function(x) {
-  inherits(x, "rrule")
+  inherits(x, "almanac_rrule")
 }
 
 all_are_rrules <- function(x) {
   all(map_lgl(x, is_rrule))
 }
 
-validate_rrule <- function(x, x_arg = "") {
-  if (nzchar(x_arg)) {
-    x_arg <- glue(" `{x_arg}`")
-  }
-
-  if (!is_rrule(x)) {
-    glubort("Input{x_arg} must be an rrule.")
-  }
-
-  invisible(x)
-}
-
-# ------------------------------------------------------------------------------
-
-check_since <- function(since) {
-  since <- vec_cast_date(since, "since")
-  vec_assert(since, size = 1L)
-
-  if (is_missing_or_infinite(since)) {
-    abort("`since` must be a finite date.")
-  }
-
-  validate_date_bounds(since, x_arg = "since")
-
-  since
-}
-
-check_until <- function(until) {
-  until <- vec_cast_date(until, "until")
-  vec_assert(until, size = 1L)
-
-  if (is_missing_or_infinite(until)) {
-    abort("`until` must be a finite date.")
-  }
-
-  validate_date_bounds(until, x_arg = "until")
-
-  until
+check_rrule <- function(x,
+                        ...,
+                        allow_null = FALSE,
+                        arg = caller_arg(x),
+                        call = caller_env()) {
+  check_inherits(
+    x = x,
+    what = "almanac_rrule",
+    allow_null = allow_null,
+    arg = arg,
+    call = call
+  )
 }
 
 # ------------------------------------------------------------------------------

@@ -17,7 +17,7 @@ The number of days to step. Can be negative to step backwards.}
 
 \item{rschedule}{\verb{[rschedule]}
 
-An rschedule, such as an rrule or rbundle.}
+An rschedule, such as an rrule, runion, rintersect, or rsetdiff.}
 }
 \value{
 A Date vector the same size as \code{x} shifted by \code{n} steps.
@@ -64,12 +64,10 @@ alma_step("2019-09-13", 2, on_weekends)
 # If Monday, 2019-09-16, was a recurring holiday, we could create
 # a custom runion and step over that too.
 on_09_16 <- yearly() \%>\%
-  recur_on_ymonth(9) \%>\%
-  recur_on_mday(16)
+  recur_on_month_of_year(9) \%>\%
+  recur_on_day_of_month(16)
 
-rb <- runion() \%>\%
-  add_rschedule(on_09_16) \%>\%
-  add_rschedule(on_weekends)
+rb <- runion(on_09_16, on_weekends)
 
 alma_step("2019-09-13", 2, rb)
 }

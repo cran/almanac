@@ -28,25 +28,18 @@
 #'
 #' # Note that the frequency is limited to "every other month", but you
 #' # can still have multiple events inside a single month
-#' on_every_other_month_on_mday_25_or_26 <- on_every_other_month %>%
-#'   recur_on_mday(25:26)
+#' on_every_other_month_on_day_25_or_26 <- on_every_other_month %>%
+#'   recur_on_day_of_month(25:26)
 #'
-#' alma_search("1999-01-01", "1999-06-01", on_every_other_month_on_mday_25_or_26)
+#' alma_search("1999-01-01", "1999-06-01", on_every_other_month_on_day_25_or_26)
 #'
 #' @export
 recur_on_interval <- function(x, n) {
-  validate_rrule(x, "x")
+  check_rrule(x)
+  check_rule_not_set(x, "interval")
 
-  if (is_already_set(x, "interval")) {
-    abort("`interval` has already been set for this rrule.")
-  }
-
-  n <- vec_cast(n, integer(), x_arg = "n")
-  vec_assert(n, size = 1L)
-
-  if (n <= 0L) {
-    abort("`n` must be greater than 0.")
-  }
+  check_number_whole(n, min = 1)
+  n <- vec_cast(n, to = integer())
 
   tweak_rrule(x, interval = n)
 }
