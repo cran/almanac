@@ -6,9 +6,8 @@
 <!-- badges: start -->
 
 [![Codecov test
-coverage](https://codecov.io/gh/DavisVaughan/almanac/branch/main/graph/badge.svg)](https://app.codecov.io/gh/DavisVaughan/almanac?branch=main)
+coverage](https://codecov.io/gh/DavisVaughan/almanac/graph/badge.svg)](https://app.codecov.io/gh/DavisVaughan/almanac)
 [![R-CMD-check](https://github.com/DavisVaughan/almanac/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DavisVaughan/almanac/actions/workflows/R-CMD-check.yaml)
-
 <!-- badges: end -->
 
 ``` r
@@ -229,7 +228,7 @@ almanac has developed as a composite of ideas from multiple different
 libraries.
 
 First off, it directly embeds the *amazing* JavaScript library
-[rrule](https://github.com/jakubroztocil/rrule) for the core event set
+[rrule](https://github.com/jkbrzt/rrule) for the core event set
 calculations. To do this, it uses the equally awesome R package,
 [V8](https://github.com/jeroen/V8), from Jeroen Ooms.
 

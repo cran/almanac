@@ -48,6 +48,7 @@ overflow: visible;
 }
 </style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -341,7 +342,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <p>Quarterly rules are the “hardest” to create in almanac because the
-specification that it is built on top of, the <a href="https://www.rfc-editor.org/rfc/rfc5545">RFC-5545 iCalendar
+specification that it is built on top of, the <a href="https://www.rfc-editor.org/info/rfc5545/">RFC-5545 iCalendar
 Spec</a> does not include quarterly as a frequency. The rationale for
 this is that it can always be built from a combination of monthly or
 yearly rules, if a bit clunky. The goal of this vignette is just to show
@@ -424,7 +425,7 @@ what we wanted.</p>
 just change the month of year values. To make this more usable, I’ll
 also wrap it in a parameterized function, and go ahead and construct the
 combined runion object from the four pieces.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>make_on_nth_doq <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">since =</span> <span class="st">&quot;1970-01-01&quot;</span>, <span class="at">nth =</span> 1L) {</span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>make_on_nth_doq <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">since =</span> <span class="st">&quot;1970-01-01&quot;</span>, <span class="at">nth =</span> <span class="dv">1</span><span class="dt">L</span>) {</span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  all_days <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">31</span></span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  </span>
 <span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  on_nth_day_of_q1 <span class="ot">&lt;-</span> <span class="fu">yearly</span>(<span class="at">since =</span> since) <span class="sc">%&gt;%</span></span>
@@ -505,7 +506,7 @@ the 6th Monday of Q1.</p>
 <p>Now generalize:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>make_on_nth_day_of_week_of_the_quarter <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">since =</span> <span class="st">&quot;1970-01-01&quot;</span>, </span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>                                                   <span class="at">day =</span> <span class="st">&quot;Monday&quot;</span>, </span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>                                                   <span class="at">nth =</span> 1L) {</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>                                                   <span class="at">nth =</span> <span class="dv">1</span><span class="dt">L</span>) {</span>
 <span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  on_nth_of_q1 <span class="ot">&lt;-</span> <span class="fu">yearly</span>(<span class="at">since =</span> since) <span class="sc">%&gt;%</span></span>
 <span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>    <span class="fu">recur_on_month_of_year</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>    <span class="fu">recur_on_day_of_week</span>(day) <span class="sc">%&gt;%</span></span>

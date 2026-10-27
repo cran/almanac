@@ -48,6 +48,7 @@ overflow: visible;
 }
 </style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -402,7 +403,7 @@ preceding Friday or following Monday.</p>
 <span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt;   &lt;rrule&gt;</span></span>
 <span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt;   • frequency: weekly</span></span>
 <span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt;   • range: [1900-01-01, 2100-01-01]</span></span>
-<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt;   • day of week: Sat, and Sun</span></span></code></pre></div>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt;   • day of week: Sat and Sun</span></span></code></pre></div>
 <p>If you’ve read <code>vignette(&quot;adjust-and-shift&quot;)</code>, then you’ll
 recognize that observances look similar to <code>radjusted()</code>, and
 in fact that is the tooling that is used under the hood.</p>
@@ -480,7 +481,7 @@ occurs on July 1st each year.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>hol_canada_day <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">since =</span> <span class="cn">NULL</span>, <span class="at">until =</span> <span class="cn">NULL</span>) {</span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">yearly</span>(<span class="at">since =</span> since, <span class="at">until =</span> until)</span>
 <span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">recur_on_month_of_year</span>(out, <span class="st">&quot;July&quot;</span>)</span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">recur_on_day_of_month</span>(out, 1L)</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">recur_on_day_of_month</span>(out, <span class="dv">1</span><span class="dt">L</span>)</span>
 <span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  </span>
 <span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="fu">rholiday</span>(<span class="at">rschedule =</span> out, <span class="at">name =</span> <span class="st">&quot;Canada Day&quot;</span>)</span>
 <span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>}</span></code></pre></div>
